@@ -73,3 +73,16 @@ function start() {
     }
     startScan().catch((err) => { });
 }
+
+function stop() {
+    html5QrCode.stop().then((res) => { });
+}
+
+// Stop using camera when the page isn't visible or the screen is off
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        start();
+    } else {
+        stop();
+    }
+});
