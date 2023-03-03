@@ -5,6 +5,24 @@ const DISCARD = 0;
 const ACCEPT = 1;
 const FINISH = 2;
 
+const format = () => {
+    if (points.length == 0) {
+        return "";
+    }
+    let table = points.map((p, idx) => {
+        const prevTime = idx > 0 ? points[idx - 1].time : p.time;
+        let dt = Date.parse(p.time) - Date.parse(prevTime);
+        dt = Math.floor(dt / 1000);
+        const sec = dt % 60;
+        dt = Math.floor(dt / 60);
+        const min = dt % 60;
+        dt = Math.floor(dt / 60);
+        const ts = ('0' + dt).slice(-2) + ':' + ('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2);
+        return `${idx}\t${new Date(p.time).toLocaleTimeString("uk-UA")}\t${ts}\t${p.id}`;
+    });
+    return table.join("\n");
+}
+
 const accept = async (id) => {
     const prevId = points.length == 0 ? "" : points[points.length - 1].id;
     if (prevId === id) {
@@ -24,7 +42,7 @@ const accept = async (id) => {
         return CLEAR;
     }
     if (id.startsWith("Finish")) {
-        document.body.innerHTML = JSON.stringify(points);
+        document.body.innerHTML = `<pre>${format()}</pre>`;
         //fetch('https://httpbin.org/post', {
         //    method: "POST",
         //    body: JSON.stringify(points),
@@ -43,7 +61,7 @@ const accept = async (id) => {
         return FINISH;
     }
     if (id.startsWith("Control")) {
-        points.push({id: id, time: new Date()});
+        points.push({id: id, time: new Date().toJSON()});
         window.localStorage.setItem("points", JSON.stringify(points));
         await beep(250, 880, 75);
         return ACCEPT;
