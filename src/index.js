@@ -1,9 +1,30 @@
+
+// Handle start number and name
+let athlete = null;
+try {
+    athlete = JSON.parse(window.localStorage.getItem("athlete"));
+} finally {
+    if (athlete == null) {
+        athlete = {"sn": 0, "name": "Athlete"};
+    }
+}
+
+const displayAthlete = (st) => {
+    document.getElementById("sn").innerHTML = st.sn;
+    document.getElementById("name").innerHTML = st.name;
+    window.localStorage.setItem("athlete", JSON.stringify(st));
+}
+
+displayAthlete(athlete);
+
 let points = new Array();
 
 const CLEAR = -1;
 const DISCARD = 0;
 const ACCEPT = 1;
 const FINISH = 2;
+
+const setStartNumberRe = /^SetStartNumber (\d+) (.*)$/g;
 
 const format = () => {
     if (points.length == 0) {
@@ -24,10 +45,30 @@ const format = () => {
 }
 
 const accept = async (id) => {
+    // Dejitter QR code scanning
     const prevId = points.length == 0 ? "" : points[points.length - 1].id;
     if (prevId === id) {
         return DISCARD;
     }
+
+    // First process controls, that's most important
+    if (id.startsWith("Control")) {
+        points.push({id: id, time: new Date().toJSON()});
+        window.localStorage.setItem("points", JSON.stringify(points));
+        await beep(250, 880, 75);
+        return ACCEPT;
+    }
+
+    // Process SetStartNumber
+    let m = setStartNumberRe.exec(id);
+    if (m) {
+        athlete.sn = Number.parseInt(m[1]);
+        athlete.name = m[2];
+        displayAthlete(athlete);
+        await beep(250, 880, 75);
+        return ACCEPT;
+    }
+
     if (id.startsWith("Clear")) {
         points = new Array();
         window.localStorage.removeItem("points");
@@ -59,12 +100,6 @@ const accept = async (id) => {
         //});
         await html5QrCode.stop();
         return FINISH;
-    }
-    if (id.startsWith("Control")) {
-        points.push({id: id, time: new Date().toJSON()});
-        window.localStorage.setItem("points", JSON.stringify(points));
-        await beep(250, 880, 75);
-        return ACCEPT;
     }
     return DISCARD;
 }
