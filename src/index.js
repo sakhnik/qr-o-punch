@@ -42,8 +42,50 @@ const format = () => {
     return table.join("\n");
 }
 
+const encodeTime = (json) => {
+    const d = new Date(json);
+    const h = d.getHours();
+    const m = d.getMinutes();
+    const s = d.getSeconds();
+    return (h * 60 + m) * 60 + s;
+};
+
+const upload = async (url) => {
+    if (controls.length < 3) {
+        return "Not enough punches (check, start, finish?)";
+    }
+    let readOut = {
+        stationNumber: 1,
+        cardNumber: athlete.startNumber,
+        checkTime: encodeTime(controls[0].time),
+        startTime: encodeTime(controls[1].time),
+        finishTime: encodeTime(controls[controls.length - 1].time),
+        punches: controls.map((c) => ({
+            cardNumber: athlete.startNumber,
+            code: c.id,
+            time: encodeTime(c.time)
+        }))
+    };
+
+    const resp = await fetch(url, {
+        method: "POST",
+        mode: 'cors',
+        body: JSON.stringify(readOut),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    });
+
+    if (resp.ok) {
+        return finish();
+    }
+
+    return await resp.text();
+}
+
 const controlRe = /^Control (?<id>\d+) (?<code>.*)$/i;
 const setStartNumberRe = /^SetStartNumber (?<startNumber>\d+) (?<name>.*)$/i;
+const uploadReadOutRe = /^UploadReadOut (?<url>.*)/i;
 
 // Remember the previously handled QR code
 let prevId = null;
@@ -58,7 +100,7 @@ const accept = async (id) => {
     let m;
 
     // First process controls, that's most important
-    if ((m = id.match(controlRe)) !=== null) {
+    if ((m = id.match(controlRe)) !== null) {
         controls.push({id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()});
         window.localStorage.setItem("controls", JSON.stringify(controls));
         await beep(250, 880, 75);
@@ -66,11 +108,18 @@ const accept = async (id) => {
     }
 
     // Process SetStartNumber
-    if ((m = id.match(setStartNumberRe)) !=== null) {
+    if ((m = id.match(setStartNumberRe)) !== null) {
         athlete.startNumber = Number.parseInt(m.groups.startNumber);
         athlete.name = m.groups.name;
         displayAthlete(athlete);
         await beep(250, 880, 75);
+        return ACCEPT;
+    }
+
+    if ((m = id.match(uploadReadOutRe)) !== null) {
+        await html5QrCode.stop();
+        await beep(250, 880, 75);
+        document.body.innerHTML = `${await upload(m.groups.url.trim())}`;
         return ACCEPT;
     }
 
@@ -90,22 +139,8 @@ const accept = async (id) => {
     }
 
     if (id.startsWith("Finish")) {
-        document.body.innerHTML = `<pre>${format()}</pre>`;
-        //fetch('https://httpbin.org/post', {
-        //    method: "POST",
-        //    body: JSON.stringify(controls),
-        //    headers: {
-        //        "Content-type": "application/json; charset=UTF-8"
-        //    }
-        //})
-        //.then((response) => {
-        //    return response.text();
-        //    //return JSON.stringify(response.json());
-        //})
-        //.then((html) => {
-        //    document.body.innerHTML = html;
-        //});
         await html5QrCode.stop();
+        document.body.innerHTML = `<pre>${format()}</pre>`;
         return FINISH;
     }
     return DISCARD;
