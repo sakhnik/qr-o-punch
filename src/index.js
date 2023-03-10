@@ -24,8 +24,6 @@ const DISCARD = 0;
 const ACCEPT = 1;
 const FINISH = 2;
 
-const setStartNumberRe = /^SetStartNumber (\d+) (.*)$/g;
-
 const format = () => {
     if (points.length == 0) {
         return "";
@@ -39,31 +37,38 @@ const format = () => {
         const min = dt % 60;
         dt = Math.floor(dt / 60);
         const ts = ('0' + dt).slice(-2) + ':' + ('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2);
-        return `${idx}\t${new Date(p.time).toLocaleTimeString("uk-UA")}\t${ts}\t${p.id}`;
+        return `${idx}\t${new Date(p.time).toLocaleTimeString("uk-UA")}\t${ts}\t${p.id}\t${p.code}`;
     });
     return table.join("\n");
 }
 
+const controlRe = /^Control (?<id>\d+) (?<code>.*)$/i;
+const setStartNumberRe = /^SetStartNumber (?<sn>\d+) (?<name>.*)$/i;
+
+// Remember the previously handled QR code
+let prevId = null;
+
 const accept = async (id) => {
     // Dejitter QR code scanning
-    const prevId = points.length == 0 ? "" : points[points.length - 1].id;
     if (prevId === id) {
         return DISCARD;
     }
+    prevId = id;
 
     // First process controls, that's most important
-    if (id.startsWith("Control")) {
-        points.push({id: id, time: new Date().toJSON()});
+    let m = id.match(controlRe);
+    if (m) {
+        points.push({id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()});
         window.localStorage.setItem("points", JSON.stringify(points));
         await beep(250, 880, 75);
         return ACCEPT;
     }
 
     // Process SetStartNumber
-    let m = setStartNumberRe.exec(id);
+    m = id.match(setStartNumberRe);
     if (m) {
-        athlete.sn = Number.parseInt(m[1]);
-        athlete.name = m[2];
+        athlete.sn = Number.parseInt(m.groups.sn);
+        athlete.name = m.groups.name;
         displayAthlete(athlete);
         await beep(250, 880, 75);
         return ACCEPT;
@@ -80,6 +85,7 @@ const accept = async (id) => {
         await delay(500);
         await beep(250, 880, 75);
         await startScan();
+        prevId = null;  // Allow clearing multiple times in a row
         return CLEAR;
     }
     if (id.startsWith("Finish")) {
