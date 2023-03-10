@@ -5,12 +5,12 @@ try {
     athlete = JSON.parse(window.localStorage.getItem("athlete"));
 } finally {
     if (athlete == null) {
-        athlete = {"sn": 0, "name": "Athlete"};
+        athlete = {"startNumber": 0, "name": "Athlete"};
     }
 }
 
 const displayAthlete = (st) => {
-    document.getElementById("sn").innerHTML = st.sn;
+    document.getElementById("startNumber").innerHTML = st.startNumber;
     document.getElementById("name").innerHTML = st.name;
     window.localStorage.setItem("athlete", JSON.stringify(st));
 }
@@ -43,7 +43,7 @@ const format = () => {
 }
 
 const controlRe = /^Control (?<id>\d+) (?<code>.*)$/i;
-const setStartNumberRe = /^SetStartNumber (?<sn>\d+) (?<name>.*)$/i;
+const setStartNumberRe = /^SetStartNumber (?<startNumber>\d+) (?<name>.*)$/i;
 
 // Remember the previously handled QR code
 let prevId = null;
@@ -67,7 +67,7 @@ const accept = async (id) => {
 
     // Process SetStartNumber
     if ((m = id.match(setStartNumberRe)) !=== null) {
-        athlete.sn = Number.parseInt(m.groups.sn);
+        athlete.startNumber = Number.parseInt(m.groups.startNumber);
         athlete.name = m.groups.name;
         displayAthlete(athlete);
         await beep(250, 880, 75);

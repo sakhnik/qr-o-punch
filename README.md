@@ -15,7 +15,10 @@ Organizers should print QR codes with commands on controls, and participants cou
 
 ## TODO
 
+* Add a command to upload the read out of punches to Quick Event
 * Decide on how to distinguish between check time vs start time
 * Choose more unique command for clearing to avoid accidents
-* Add a command to upload the read out of punches to Quick Event
 * Create instructions in Ukrainian language
+* Wrap the startup code in try .. catch and display startup errors
+* Rename Finish to Display
+* Add the Back button to Finish
