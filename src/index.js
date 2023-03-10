@@ -17,7 +17,7 @@ const displayAthlete = (st) => {
 
 displayAthlete(athlete);
 
-let points = new Array();
+let controls = new Array();
 
 const CLEAR = -1;
 const DISCARD = 0;
@@ -25,11 +25,11 @@ const ACCEPT = 1;
 const FINISH = 2;
 
 const format = () => {
-    if (points.length == 0) {
+    if (controls.length == 0) {
         return "";
     }
-    let table = points.map((p, idx) => {
-        const prevTime = idx > 0 ? points[idx - 1].time : p.time;
+    let table = controls.map((p, idx) => {
+        const prevTime = idx > 0 ? controls[idx - 1].time : p.time;
         let dt = Date.parse(p.time) - Date.parse(prevTime);
         dt = Math.floor(dt / 1000);
         const sec = dt % 60;
@@ -55,18 +55,18 @@ const accept = async (id) => {
     }
     prevId = id;
 
+    let m;
+
     // First process controls, that's most important
-    let m = id.match(controlRe);
-    if (m) {
-        points.push({id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()});
-        window.localStorage.setItem("points", JSON.stringify(points));
+    if ((m = id.match(controlRe)) !=== null) {
+        controls.push({id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()});
+        window.localStorage.setItem("controls", JSON.stringify(controls));
         await beep(250, 880, 75);
         return ACCEPT;
     }
 
     // Process SetStartNumber
-    m = id.match(setStartNumberRe);
-    if (m) {
+    if ((m = id.match(setStartNumberRe)) !=== null) {
         athlete.sn = Number.parseInt(m.groups.sn);
         athlete.name = m.groups.name;
         displayAthlete(athlete);
@@ -75,8 +75,8 @@ const accept = async (id) => {
     }
 
     if (id.startsWith("Clear")) {
-        points = new Array();
-        window.localStorage.removeItem("points");
+        controls = new Array();
+        window.localStorage.removeItem("controls");
 
         await html5QrCode.stop();
         await beep(250, 880, 75);
@@ -88,11 +88,12 @@ const accept = async (id) => {
         prevId = null;  // Allow clearing multiple times in a row
         return CLEAR;
     }
+
     if (id.startsWith("Finish")) {
         document.body.innerHTML = `<pre>${format()}</pre>`;
         //fetch('https://httpbin.org/post', {
         //    method: "POST",
-        //    body: JSON.stringify(points),
+        //    body: JSON.stringify(controls),
         //    headers: {
         //        "Content-type": "application/json; charset=UTF-8"
         //    }
@@ -126,9 +127,9 @@ const startScan = async () => {
 }
 
 function start() {
-    const p = window.localStorage.getItem("points");
+    const p = window.localStorage.getItem("controls");
     if (p != null) {
-        points = JSON.parse(p);
+        controls = JSON.parse(p);
     }
     startScan().catch((err) => { });
 }
