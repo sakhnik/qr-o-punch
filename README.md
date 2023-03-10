@@ -15,6 +15,39 @@ The following commands could be encoded with [`qrencode`](https://fukuchi.org/wo
 * `Finish` — display the punched controls so far
 * `UploadReadOut <url>` — upload the run to Quick-Event at the given URL
 
+### Exposing Quick Event TCP port
+
+The upload may be quirky. If the app was served from HTTPS, the upload should also happen to HTTPS, it'll be blocked by the browser otherwise. Quick Event only accepts plain simple HTTP, so reverse proxy and port forwarding could be used to expose Quick Event socket to the outer world via HTTPS:
+
+There's sample nginx configuration on the web server:
+
+```
+location /qr-o-punch {
+    proxy_pass http://127.0.0.1:8888;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+}
+```
+
+From the Quick Event host, SSH could be used to forward port 8888 on the web server back to the localhost:
+
+```
+ssh sakhnik.com -R 8888:localhost:12345
+```
+
+Then Quick Event should be instructed to start listening on port 12345:
+
+```
+QE_TCP_PORT=12345 quickevent
+```
+
+Thus, runners could use the following QR command to upload their punch card readouts:
+
+```
+UploadReadOut https://sakhnik.com/qr-o-punch
+```
 
 ## TODO
 
@@ -23,4 +56,4 @@ The following commands could be encoded with [`qrencode`](https://fukuchi.org/wo
 * Create instructions in Ukrainian language
 * Wrap the startup code in try .. catch and display startup errors
 * Rename Finish to Display
-* Add the Back button to Finish
+* Add the Back button to Finish, make application resilient without reloading

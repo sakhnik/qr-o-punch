@@ -77,7 +77,7 @@ const upload = async (url) => {
     });
 
     if (resp.ok) {
-        return finish();
+        return `<pre>${format()}</pre>`;
     }
 
     return await resp.text();
