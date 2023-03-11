@@ -43,6 +43,9 @@ const format = () => {
 }
 
 const encodeTime = (json) => {
+    if (json === null) {
+        return 0xEEEE;
+    }
     const d = new Date(json);
     const h = d.getHours();
     const m = d.getMinutes();
@@ -57,8 +60,8 @@ const upload = async (url) => {
     let readOut = {
         stationNumber: 1,
         cardNumber: athlete.startNumber,
-        checkTime: encodeTime(controls[0].time),
-        startTime: encodeTime(controls[1].time),
+        checkTime: encodeTime(window.localStorage.getItem("checkTime")),
+        startTime: encodeTime(controls[0].time),
         finishTime: encodeTime(controls[controls.length - 1].time),
         punches: controls.map((c) => ({
             cardNumber: athlete.startNumber,
@@ -123,9 +126,10 @@ const accept = async (id) => {
         return ACCEPT;
     }
 
-    if (id.startsWith("Clear")) {
+    if (id.startsWith("Check in for a new start")) {
         controls = new Array();
         window.localStorage.removeItem("controls");
+        window.localStorage.setItem("checkTime", new Date().toJSON());
 
         await html5QrCode.stop();
         await beep(250, 880, 75);

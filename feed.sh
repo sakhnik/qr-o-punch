@@ -1,5 +1,10 @@
 #!/bin/bash -e
 
+if [[ $# -lt 1 ]]; then
+    echo >&2 "Usage: $(basename $0) <controls.txt>"
+    exit 1
+fi
+
 show_qr()
 {
     echo "$1"
@@ -8,7 +13,7 @@ show_qr()
 }
 
 show_qr "SetStartNumber 123 Anatolii Sakhnik"
-show_qr "Clear"
+show_qr "Check in for a new start"
 
 for i in $(cat $1); do
     show_qr "Control $i $(fortune | cut -f1-10 -d' ' | head -1)"

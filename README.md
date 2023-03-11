@@ -10,7 +10,7 @@ Organizers should print QR codes with commands on controls, and participants cou
 The following commands could be encoded with [`qrencode`](https://fukuchi.org/works/qrencode/), for example:
 
 * `SetStartNumber N <name>` — set athlete name and start number
-* `Clear` — clear previous punches
+* `Check in for a new start` — clear previous punches, mark check time
 * `Control N <code>` — punch at some control
 * `Finish` — display the punched controls so far
 * `UploadReadOut <url>` — upload the run to Quick-Event at the given URL
@@ -51,8 +51,6 @@ UploadReadOut https://sakhnik.com/qr-o-punch
 
 ## TODO
 
-* Decide on how to distinguish between check time vs start time
-* Choose more unique command for clearing to avoid accidents
 * Create instructions in Ukrainian language
 * Wrap the startup code in try .. catch and display startup errors
 * Rename Finish to Display
