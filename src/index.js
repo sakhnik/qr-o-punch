@@ -37,7 +37,12 @@ const format = () => {
         const min = dt % 60;
         dt = Math.floor(dt / 60);
         const ts = ('0' + dt).slice(-2) + ':' + ('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2);
-        return `${idx}\t${new Date(p.time).toLocaleTimeString("uk-UA")}\t${ts}\t${p.id}\t${p.code}`;
+        let row = `${idx}\t${new Date(p.time).toLocaleTimeString("uk-UA")}\t${ts}\t${p.id}`;
+        if (p.position !== null) {
+            const pos = p.position;
+            return `${row}\t${pos.latitude},${pos.longitude}\t${pos.accuracy}\t${p.code}`;
+        }
+        return `${row}\t${p.code}`;
     });
     return table.join("\n");
 }
@@ -66,7 +71,8 @@ const upload = async (url) => {
         punches: controls.map((c) => ({
             cardNumber: athlete.startNumber,
             code: c.id,
-            time: encodeTime(c.time)
+            time: encodeTime(c.time),
+            position: c.position
         }))
     };
 
@@ -84,6 +90,37 @@ const upload = async (url) => {
     }
 
     return await resp.text();
+}
+
+const getLocation = (control) => {
+    const x = document.getElementById("location");
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const c = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                    accuracy: Math.round(pos.coords.accuracy)
+                };
+                x.innerHTML = `${c.latitude},${c.longitude} ±${c.accuracy}`;
+                // Record the position at the control
+                if (control !== null) {
+                    control.position = c;
+                    window.localStorage.setItem("controls", JSON.stringify(controls));
+                }
+            },
+            (err) => {
+                switch (err.code) {
+                    case err.PERMISSION_DENIED:     x.innerHTML = "NA (denied)"; break;
+                    case err.POSITION_UNAVAILABLE:  x.innerHTML = "NA (unavail)"; break;
+                    case err.TIMEOUT:               x.innerHTML = "NA (timeout)"; break;
+                    case err.UNKNOWN_ERROR:         x.innerHTML = "NA (unk)"; break;
+                }
+            }
+        );
+    } else { 
+        x.innerHTML = "NA";
+    }
 }
 
 const controlRe = /^Control (?<id>\d+) (?<code>.*)$/i;
@@ -104,8 +141,11 @@ const accept = async (id) => {
 
     // First process controls, that's most important
     if ((m = id.match(controlRe)) !== null) {
-        controls.push({id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()});
+        const control = {id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()};
+        controls.push(control);
         window.localStorage.setItem("controls", JSON.stringify(controls));
+        // Initiate obtaining location for this control, will finish asynchronously
+        getLocation(control);
         await beep(250, 880, 75);
         return ACCEPT;
     }
@@ -115,6 +155,8 @@ const accept = async (id) => {
         athlete.startNumber = Number.parseInt(m.groups.startNumber);
         athlete.name = m.groups.name;
         displayAthlete(athlete);
+        // Test whether location is available, obtain permission etc.
+        getLocation(null);
         await beep(250, 880, 75);
         return ACCEPT;
     }
