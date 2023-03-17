@@ -23,6 +23,7 @@ There's sample nginx configuration on the web server:
 
 ```
 location /qr-o-punch {
+    rewrite    /qr-o-punch/(.*) /$1 break;
     proxy_pass http://127.0.0.1:8888;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
