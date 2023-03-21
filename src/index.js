@@ -129,13 +129,16 @@ const uploadReadOutRe = /^UploadReadOut (?<url>.*)/i;
 
 // Remember the previously handled QR code
 let prevId = null;
+let prevTime = new Date();
 
 const accept = async (id) => {
     // Dejitter QR code scanning
-    if (prevId === id) {
+    const now = new Date();
+    if (prevId === id && (now - prevTime) < 1000) {
         return DISCARD;
     }
     prevId = id;
+    prevTime = now;
 
     let m;
 
@@ -180,7 +183,6 @@ const accept = async (id) => {
         await delay(500);
         await beep(250, 880, 75);
         await startScan();
-        prevId = null;  // Allow clearing multiple times in a row
         return CLEAR;
     }
 
