@@ -1,3 +1,16 @@
 #!/bin/bash -e
 
-rsync -raP --delete --chown 33:33 src/* sakhnik.com:/var/www/sakhnik.com/qr/ --exclude='*.sh'
+this_dir=$(readlink -f $(dirname "${BASH_SOURCE[0]}"))
+cd $this_dir
+
+rsync -raP --delete --chown 33:33 src/* sakhnik.com:/var/www/sakhnik.com/qr/
+
+mkdir -p qr
+(
+cd qr
+rsync -raP --delete ${this_dir}/src/* . --exclude=html5-qrcode.js
+wget -c https://unpkg.com/html5-qrcode -O html5-qrcode.js
+sed -i 's|https://unpkg.com/html5-qrcode|html5-qrcode.js|' index.html
+zip -r ../qr.zip *
+)
+rsync -raP --delete --chown 33:33 qr.zip sakhnik.com:/var/www/sakhnik.com/
