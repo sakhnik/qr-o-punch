@@ -52,7 +52,6 @@ UploadReadOut https://sakhnik.com/qr-o-punch
 
 ## TODO
 
-* Create instructions in Ukrainian language
 * Wrap the startup code in try .. catch and display startup errors
 * Rename Finish to Display
 * Add the Back button to Finish, make application resilient without reloading
