@@ -23,6 +23,19 @@ There's sample nginx configuration on the web server:
 
 ```
 location /qr-o-punch {
+    add_header Access-Control-Allow-Origin "*";                                                                                      
+    add_header Access-Control-Allow-Methods "POST";                                                                                  
+                                                                                                                                     
+    # Handling preflight requests                                                                                                    
+    if ($request_method = OPTIONS) {                                                                                                 
+        add_header Access-Control-Allow-Origin "*";                                                                                  
+        add_header Access-Control-Allow-Methods "POST";                                                                              
+        add_header Access-Control-Allow-Headers "*";                                                                                 
+        add_header Content-Type text/plain;                                                                                          
+        add_header Content-Length 0;                                                                                                 
+        return 204;                                                                                                                  
+    }
+
     rewrite    /qr-o-punch/(.*) /$1 break;
     proxy_pass http://127.0.0.1:8888;
     proxy_set_header Host $host;
