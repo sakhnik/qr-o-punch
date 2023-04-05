@@ -165,8 +165,6 @@ const accept = async (id) => {
         athlete.startNumber = Number.parseInt(m.groups.startNumber);
         athlete.name = m.groups.name;
         displayAthlete(athlete);
-        // Test whether location is available, obtain permission etc.
-        getLocation(null);
         await beep(250, 880, 75);
         return ACCEPT;
     }
@@ -243,3 +241,6 @@ document.addEventListener("visibilitychange", () => {
         stop();
     }
 });
+
+// Test whether location is available, obtain permission etc.
+getLocation(null);
