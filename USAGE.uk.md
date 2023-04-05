@@ -21,9 +21,8 @@
 
 * Встановити [Simple HTTP Server](https://play.google.com/store/apps/details?id=com.phlox.simpleserver)
 * Завантажити архів програми з адреси https://sakhnik.com/qr.zip
-* Розпакувати файли з архіву в /sdcard/Download/qr/
+* Розпакувати (витягнути) файли з архіву в /sdcard/Download/qr/
 * Запустити додаток Simple HTTP Server
-* Впевнитися, що серед адрес є 127.0.0.1, а порт заданий числом 8080
 * Задати Root folder -> External folder -> /sdcard/Download/qr
 * Натиснути START
 * Запустити навігатор тенет Google Chrome або Mozilla Firefox
