@@ -24,7 +24,7 @@ const DISCARD = 0;
 const ACCEPT = 1;
 const FINISH = 2;
 
-const format = () => {
+const getReadoutTable = () => {
     if (controls.length == 0) {
         return "";
     }
@@ -58,9 +58,9 @@ const encodeTime = (json) => {
     return (h * 60 + m) * 60 + s;
 };
 
-const upload = async (url) => {
-    if (controls.length < 3) {
-        return "Not enough punches (check, start, finish?)";
+const getReadoutJson = () => {
+    if (controls.length < 2) {
+        return "Not enough punches (start, finish?)";
     }
     let readOut = {
         stationNumber: 1,
@@ -75,18 +75,25 @@ const upload = async (url) => {
             position: c.position
         }))
     };
+    return JSON.stringify(readOut, null, 2);
+};
+
+const upload = async (url) => {
+    if (controls.length < 2) {
+        return "Not enough punches (start, finish?)";
+    }
 
     const resp = await fetch(url, {
         method: "POST",
         mode: 'cors',
-        body: JSON.stringify(readOut),
+        body: getReadoutJson(),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
 
     if (resp.ok) {
-        return `<pre>${format()}</pre>`;
+        return `<pre>${getReadoutTable()}</pre>`;
     }
 
     return await resp.text();
@@ -186,11 +193,18 @@ const accept = async (id) => {
         return CLEAR;
     }
 
-    if (id.startsWith("Finish")) {
+    if (id.startsWith("Display table")) {
         await html5QrCode.stop();
-        document.body.innerHTML = `<pre>${format()}</pre>`;
+        document.body.innerHTML = `<pre>${getReadoutTable()}</pre>`;
         return FINISH;
     }
+
+    if (id.startsWith("Display json")) {
+        await html5QrCode.stop();
+        document.body.innerHTML = `<pre>${getReadoutJson()}</pre>`;
+        return FINISH;
+    }
+
     return DISCARD;
 }
 
