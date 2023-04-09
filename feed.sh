@@ -12,7 +12,7 @@ show_qr()
     read
 }
 
-show_qr "SetStartNumber 123 Anatolii Sakhnik"
+show_qr "SetStartNumber 123 <M21> Anatolii Sakhnik"
 show_qr "Check in for a new start"
 
 for i in $(cat $1); do

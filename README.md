@@ -9,7 +9,7 @@ Organizers should print QR codes with commands on controls, and participants cou
 
 The following commands could be encoded with [`qrencode`](https://fukuchi.org/works/qrencode/), for example:
 
-* `SetStartNumber N <name>` — set athlete name and start number
+* `SetStartNumber N <class> FirstName LastName` — set athlete name, class and start number
 * `Check in for a new start` — clear previous punches, mark check time
 * `Control N <code>` — punch at some control
 * `Display table` — display the punched controls in a human readable form

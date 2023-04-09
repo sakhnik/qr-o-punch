@@ -12,6 +12,7 @@ try {
 const displayAthlete = (st) => {
     document.getElementById("startNumber").innerHTML = st.startNumber;
     document.getElementById("name").innerHTML = st.name;
+    document.getElementById("class").innerHTML = st.class;
     window.localStorage.setItem("athlete", JSON.stringify(st));
 }
 
@@ -131,7 +132,7 @@ const getLocation = (control) => {
 }
 
 const controlRe = /^Control (?<id>\d+) (?<code>.*)$/i;
-const setStartNumberRe = /^SetStartNumber (?<startNumber>\d+) (?<name>.*)$/i;
+const setStartNumberRe = /^SetStartNumber (?<startNumber>\d+) <(?<class>[^>]*)> (?<name>.*)$/i;
 const uploadReadOutRe = /^UploadReadOut (?<url>.*)/i;
 
 // Remember the previously handled QR code
@@ -167,6 +168,7 @@ const accept = async (id) => {
     // Process SetStartNumber
     if ((m = id.match(setStartNumberRe)) !== null) {
         athlete.startNumber = Number.parseInt(m.groups.startNumber);
+        athlete.class = m.groups.class;
         athlete.name = m.groups.name;
         displayAthlete(athlete);
         await beep(250, 880, 75);
