@@ -152,10 +152,14 @@ const accept = async (id) => {
     // First process controls, that's most important
     if ((m = id.match(controlRe)) !== null) {
         const control = {id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()};
-        controls.push(control);
-        window.localStorage.setItem("controls", JSON.stringify(controls));
-        // Initiate obtaining location for this control, will finish asynchronously
-        getLocation(control);
+        const prevControl = controls.length > 0 ? controls[controls.length - 1] : null;
+        // Ignore repetitive punches
+        if (prevControl == null || prevControl.id != control.id) {
+            controls.push(control);
+            window.localStorage.setItem("controls", JSON.stringify(controls));
+            // Initiate obtaining location for this control, will finish asynchronously
+            getLocation(control);
+        }
         await beep(250, 880, 75);
         return ACCEPT;
     }
