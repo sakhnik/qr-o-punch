@@ -1,4 +1,15 @@
 
+// Handle visual blinking
+const athleteBox = document.getElementById("athlete");
+const athleteBoxOrigBg = athleteBox.style.background;
+
+const blink = (color, duration) => {
+    athleteBox.style.background = color;
+    setTimeout(() => {
+        athleteBox.style.background = athleteBoxOrigBg;
+    }, duration);
+};
+
 // Handle start number and name
 let athlete = null;
 try {
@@ -162,6 +173,7 @@ const accept = async (id) => {
             getLocation(control);
         }
         navigator.vibrate(250);
+        blink('green', 250);
         await beep(250, 880, 75);
         return ACCEPT;
     }
@@ -173,15 +185,16 @@ const accept = async (id) => {
         athlete.name = m.groups.name;
         displayAthlete(athlete);
         navigator.vibrate(250);
+        blink('green', 250);
         await beep(250, 880, 75);
         return ACCEPT;
     }
 
     if ((m = id.match(uploadReadOutRe)) !== null) {
         await html5QrCode.stop();
+        document.body.innerHTML = `${await upload(m.groups.url.trim())}`;
         navigator.vibrate(250);
         await beep(250, 880, 75);
-        document.body.innerHTML = `${await upload(m.groups.url.trim())}`;
         return ACCEPT;
     }
 
@@ -192,10 +205,13 @@ const accept = async (id) => {
 
         await html5QrCode.stop();
         navigator.vibrate([250, 500, 250, 500, 250]);
+        blink('green', 250);
         await beep(250, 880, 75);
         await delay(500);
+        blink('green', 250);
         await beep(250, 880, 75);
         await delay(500);
+        blink('green', 250);
         await beep(250, 880, 75);
         await startScan();
         return CLEAR;
@@ -227,6 +243,7 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
             console.log(`Line ${ex.lineNumber} ${ex}`);
             startScan().then(res => { });
             navigator.vibrate([100, 30, 100, 30, 100, 30, 100]);
+            blink('red', 500);
             beep(500, 220, 100);
         })
     ;
