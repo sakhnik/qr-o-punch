@@ -161,6 +161,7 @@ const accept = async (id) => {
             // Initiate obtaining location for this control, will finish asynchronously
             getLocation(control);
         }
+        navigator.vibrate(250);
         await beep(250, 880, 75);
         return ACCEPT;
     }
@@ -171,12 +172,14 @@ const accept = async (id) => {
         athlete.class = m.groups.class;
         athlete.name = m.groups.name;
         displayAthlete(athlete);
+        navigator.vibrate(250);
         await beep(250, 880, 75);
         return ACCEPT;
     }
 
     if ((m = id.match(uploadReadOutRe)) !== null) {
         await html5QrCode.stop();
+        navigator.vibrate(250);
         await beep(250, 880, 75);
         document.body.innerHTML = `${await upload(m.groups.url.trim())}`;
         return ACCEPT;
@@ -188,6 +191,7 @@ const accept = async (id) => {
         window.localStorage.setItem("checkTime", new Date().toJSON());
 
         await html5QrCode.stop();
+        navigator.vibrate([250, 500, 250, 500, 250]);
         await beep(250, 880, 75);
         await delay(500);
         await beep(250, 880, 75);
@@ -221,6 +225,8 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         .then(res => { })
         .catch(ex => {
             console.log(`Line ${ex.lineNumber} ${ex}`);
+            startScan().then(res => { });
+            navigator.vibrate([100, 30, 100, 30, 100, 30, 100]);
             beep(500, 220, 100);
         })
     ;

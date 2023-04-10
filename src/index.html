@@ -15,10 +15,18 @@
     </div>
     <div id="reader" width="600px"></div>
 
+    <button id="activate" type="button">Activate vibration</button>
     <p>Source: https://github.com/sakhnik/qr-o-punch</p>
 
+    <script>
+        // Force user to interact with UI to enable vibration.
+        const btActivate = document.getElementById("activate");
+        btActivate.addEventListener('click', (event) => {
+            btActivate.style.visibility = "hidden";
+        });
+    </script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="audio.js"></script>
-    <script src="index.js?2"></script>
+    <script src="index.js?filever=5"></script>
   </body>
 </html>
