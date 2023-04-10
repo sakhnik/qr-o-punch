@@ -217,7 +217,13 @@ const html5QrCode = new Html5Qrcode("reader");
 
 const qrCodeSuccessCallback = (decodedText, decodedResult) => {
     /* handle success */
-    accept(decodedText).then(res => { });
+    accept(decodedText)
+        .then(res => { })
+        .catch(ex => {
+            console.log(`Line ${ex.lineNumber} ${ex}`);
+            beep(500, 220, 100);
+        })
+    ;
 };
 
 const config = { fps: 10, qrbox: { width: 250, height: 250 } };
