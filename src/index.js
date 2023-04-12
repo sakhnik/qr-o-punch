@@ -50,7 +50,7 @@ const getReadoutTable = () => {
         dt = Math.floor(dt / 60);
         const ts = ('0' + dt).slice(-2) + ':' + ('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2);
         let row = `${idx}\t${new Date(p.time).toLocaleTimeString("uk-UA")}\t${ts}\t${p.id}`;
-        if (p.position !== null) {
+        if (p.position != null) {
             const pos = p.position;
             return `${row}\t${pos.latitude},${pos.longitude}\t${pos.accuracy}\t${p.code}`;
         }
