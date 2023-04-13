@@ -70,7 +70,7 @@ const encodeTime = (json) => {
     return (h * 60 + m) * 60 + s;
 };
 
-const getReadoutJson = () => {
+const getReadoutJson = (begin, end) => {
     if (controls.length < 2) {
         return "Not enough punches (start, finish?)";
     }
@@ -80,7 +80,7 @@ const getReadoutJson = () => {
         checkTime: encodeTime(window.localStorage.getItem("checkTime")),
         startTime: encodeTime(controls[0].time),
         finishTime: encodeTime(controls[controls.length - 1].time),
-        punches: controls.map((c) => ({
+        punches: controls.slice(begin, end).map((c) => ({
             cardNumber: athlete.startNumber,
             code: c.id,
             time: encodeTime(c.time),
@@ -95,10 +95,11 @@ const upload = async (url) => {
         return "Not enough punches (start, finish?)";
     }
 
+    // No need to upload start and finish punches.
     const resp = await fetch(url, {
         method: "POST",
         mode: 'cors',
-        body: getReadoutJson(),
+        body: getReadoutJson(1, controls.length - 1),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
@@ -225,7 +226,7 @@ const accept = async (id) => {
 
     if (id.startsWith("Display json")) {
         await html5QrCode.stop();
-        document.body.innerHTML = `<pre>${getReadoutJson()}</pre>`;
+        document.body.innerHTML = `<pre>${getReadoutJson(0, controls.length)}</pre>`;
         return FINISH;
     }
 
