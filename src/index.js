@@ -11,25 +11,23 @@ const blink = (color, duration) => {
 };
 
 // Handle start number and name
-let athlete = null;
-try {
-    athlete = JSON.parse(window.localStorage.getItem("athlete"));
-} finally {
-    if (athlete == null) {
-        athlete = {"startNumber": 0, "name": "Athlete"};
-    }
+let athlete = {"startNumber": 0, "name": "Athlete"};
+if (localStorage.athlete != null) {
+    athlete = JSON.parse(localStorage.athlete);
 }
 
 const displayAthlete = (st) => {
     document.getElementById("startNumber").innerHTML = st.startNumber;
     document.getElementById("name").innerHTML = st.name;
     document.getElementById("class").innerHTML = st.class;
-    window.localStorage.setItem("athlete", JSON.stringify(st));
+    localStorage.athlete = JSON.stringify(st);
 }
 
 displayAthlete(athlete);
 
-let controls = new Array();
+let state = {
+    controls: []
+};
 
 const CLEAR = -1;
 const DISCARD = 0;
@@ -37,6 +35,7 @@ const ACCEPT = 1;
 const FINISH = 2;
 
 const getReadoutTable = () => {
+    const controls = state.controls;
     if (controls.length == 0) {
         return "";
     }
@@ -60,7 +59,7 @@ const getReadoutTable = () => {
 }
 
 const encodeTime = (json) => {
-    if (json === null) {
+    if (json == null) {
         return 0xEEEE;
     }
     const d = new Date(json);
@@ -70,28 +69,34 @@ const encodeTime = (json) => {
     return (h * 60 + m) * 60 + s;
 };
 
-const getReadoutJson = (begin, end) => {
-    if (controls.length < 2) {
+const getReadoutJson = (trim) => {
+    if (state.controls.length < 2) {
         return "Not enough punches (start, finish?)";
     }
-    let readOut = {
-        stationNumber: 1,
-        cardNumber: athlete.startNumber,
-        checkTime: encodeTime(window.localStorage.getItem("checkTime")),
-        startTime: encodeTime(controls[0].time),
-        finishTime: encodeTime(controls[controls.length - 1].time),
-        punches: controls.slice(begin, end).map((c) => ({
+    const getReadOut = (st) => {
+        if (st == null || st.controls == null || st.controls.length < 2) {
+            return {};
+        }
+        return {
+            stationNumber: 1,
             cardNumber: athlete.startNumber,
-            code: c.id,
-            time: encodeTime(c.time),
-            position: c.position
-        }))
+            checkTime: encodeTime(st.checkTime),
+            startTime: encodeTime(st.controls[0].time),
+            finishTime: encodeTime(st.controls[st.controls.length - 1].time),
+            punches: (trim ? st.controls.slice(1, st.length - 1) : st.controls).map((c) => ({
+                cardNumber: athlete.startNumber,
+                code: c.id,
+                time: encodeTime(c.time),
+                position: c.position
+            })),
+            prevStart: getReadOut(st.prevState)
+        };
     };
-    return JSON.stringify(readOut, null, 2);
+    return JSON.stringify(getReadOut(state), null, 2);
 };
 
 const upload = async (url) => {
-    if (controls.length < 2) {
+    if (state.controls.length < 2) {
         return "Not enough punches (start, finish?)";
     }
 
@@ -99,7 +104,7 @@ const upload = async (url) => {
     const resp = await fetch(url, {
         method: "POST",
         mode: 'cors',
-        body: getReadoutJson(1, controls.length - 1),
+        body: getReadoutJson(true),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
@@ -126,7 +131,7 @@ const getLocation = (control) => {
                 // Record the position at the control
                 if (control !== null) {
                     control.position = c;
-                    window.localStorage.setItem("controls", JSON.stringify(controls));
+                    localStorage.state = JSON.stringify(state);
                 }
             },
             (err) => {
@@ -164,12 +169,13 @@ const accept = async (id) => {
 
     // First process controls, that's most important
     if ((m = id.match(controlRe)) !== null) {
+        let controls = state.controls;
         const control = {id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()};
         const prevControl = controls.length > 0 ? controls[controls.length - 1] : null;
         // Ignore repetitive punches
         if (prevControl == null || prevControl.id != control.id) {
             controls.push(control);
-            window.localStorage.setItem("controls", JSON.stringify(controls));
+            localStorage.state = JSON.stringify(state);
             // Initiate obtaining location for this control, will finish asynchronously
             getLocation(control);
         }
@@ -200,9 +206,13 @@ const accept = async (id) => {
     }
 
     if (id.startsWith("Check in for a new start")) {
-        controls = new Array();
-        window.localStorage.removeItem("controls");
-        window.localStorage.setItem("checkTime", new Date().toJSON());
+        let newState = {
+            prevState: state,
+            controls: [],
+            checkTime: new Date().toJSON()
+        }
+        state = newState;
+        localStorage.state = JSON.stringify(state);
 
         await html5QrCode.stop();
         navigator.vibrate([250, 500, 250, 500, 250]);
@@ -226,7 +236,7 @@ const accept = async (id) => {
 
     if (id.startsWith("Display json")) {
         await html5QrCode.stop();
-        document.body.innerHTML = `<pre>${getReadoutJson(0, controls.length)}</pre>`;
+        document.body.innerHTML = `<pre>${getReadoutJson(false)}</pre>`;
         return FINISH;
     }
 
@@ -258,15 +268,24 @@ const startScan = async () => {
 }
 
 function start() {
-    const p = window.localStorage.getItem("controls");
-    if (p != null) {
-        controls = JSON.parse(p);
+    if (localStorage.controls != null) {
+        // Migrate from the previous format
+        state = {
+            controls: JSON.parse(localStorage.controls),
+            checkTime: localStorage.checkTime,
+        };
+        localStorage.state = JSON.stringify(state);
+        localStorage.removeItem("controls");
+        localStorage.removeItem("checkTime");
+    } else if (localStorage.state != null) {
+        state = JSON.parse(localStorage.state);
     }
-    startScan().catch((err) => { });
+    startScan().catch((err) => { console.log("start scanner: " + err)});
 }
 
 function stop() {
-    html5QrCode.stop().then((res) => { });
+    html5QrCode.stop()
+        .catch((err) => { console.log("stop scanner: " + err)});
 }
 
 // Stop using camera when the page isn't visible or the screen is off
