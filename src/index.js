@@ -148,6 +148,14 @@ const getLocation = (control) => {
     }
 }
 
+const vibrate = (args) => {
+    try {
+        navigator.vibrate(args);
+    } catch (e) {
+        console.log("No vibration: " + e);
+    }
+};
+
 const controlRe = /^Control (?<id>\d+) (?<code>.*)$/i;
 const setStartNumberRe = /^SetStartNumber (?<startNumber>\d+) <(?<class>[^>]*)> (?<name>.*)$/i;
 const uploadReadOutRe = /^UploadReadOut (?<url>.*)/i;
@@ -179,7 +187,7 @@ const accept = async (id) => {
             // Initiate obtaining location for this control, will finish asynchronously
             getLocation(control);
         }
-        navigator.vibrate(250);
+        vibrate(250);
         blink('green', 250);
         await beep(250, 880, 75);
         return ACCEPT;
@@ -191,7 +199,7 @@ const accept = async (id) => {
         athlete.class = m.groups.class;
         athlete.name = m.groups.name;
         displayAthlete(athlete);
-        navigator.vibrate(250);
+        vibrate(250);
         blink('green', 250);
         await beep(250, 880, 75);
         return ACCEPT;
@@ -200,7 +208,7 @@ const accept = async (id) => {
     if ((m = id.match(uploadReadOutRe)) !== null) {
         await html5QrCode.stop();
         document.body.innerHTML = `${await upload(m.groups.url.trim())}`;
-        navigator.vibrate(250);
+        vibrate(250);
         await beep(250, 880, 75);
         return ACCEPT;
     }
@@ -215,7 +223,7 @@ const accept = async (id) => {
         localStorage.state = JSON.stringify(state);
 
         await html5QrCode.stop();
-        navigator.vibrate([250, 500, 250, 500, 250]);
+        vibrate([250, 500, 250, 500, 250]);
         blink('green', 250);
         await beep(250, 880, 75);
         await delay(500);
@@ -253,7 +261,7 @@ const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         .catch(ex => {
             console.log(`Line ${ex.lineNumber} ${ex}`);
             startScan().then(res => { });
-            navigator.vibrate([100, 30, 100, 30, 100, 30, 100]);
+            vibrate([100, 30, 100, 30, 100, 30, 100]);
             blink('red', 500);
             beep(500, 220, 100);
         })
