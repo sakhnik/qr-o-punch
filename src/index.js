@@ -89,7 +89,6 @@ const getReadoutJson = (trim) => {
                 time: encodeTime(c.time),
                 position: c.position
             })),
-            prevStart: getReadOut(st.prevState)
         };
     };
     return JSON.stringify(getReadOut(state), null, 2);
@@ -214,12 +213,10 @@ const accept = async (id) => {
     }
 
     if (id.startsWith("Check in for a new start")) {
-        let newState = {
-            prevState: state,
+        state = {
             controls: [],
             checkTime: new Date().toJSON()
         }
-        state = newState;
         localStorage.state = JSON.stringify(state);
 
         await html5QrCode.stop();
