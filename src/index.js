@@ -25,9 +25,13 @@ const displayAthlete = (st) => {
 
 displayAthlete(athlete);
 
-let state = {
-    controls: []
+const getCleanState = () => {
+    return {
+        controls: [],
+        checkTime: new Date().toJSON()
+    };
 };
+let state = getCleanState();
 
 const CLEAR = -1;
 const DISCARD = 0;
@@ -176,8 +180,16 @@ const accept = async (id) => {
 
     // First process controls, that's most important
     if ((m = id.match(controlRe)) !== null) {
+        const controlId = Number.parseInt(m.groups.id);
+        // Assume "start" controls are low numbers. If there are other controls punched before start,
+        // forget about them. The athlete must have missed "Check in for a new start".
+        if (controlId <= 10) {
+            if (state.controls.length > 0) {
+                state = getCleanState();
+            }
+        }
         let controls = state.controls;
-        const control = {id: Number.parseInt(m.groups.id), code: m.groups.code, time: new Date().toJSON()};
+        const control = {id: controlId, code: m.groups.code, time: new Date().toJSON()};
         const prevControl = controls.length > 0 ? controls[controls.length - 1] : null;
         // Ignore repetitive punches
         if (prevControl == null || prevControl.id != control.id) {
@@ -213,10 +225,7 @@ const accept = async (id) => {
     }
 
     if (id.startsWith("Check in for a new start")) {
-        state = {
-            controls: [],
-            checkTime: new Date().toJSON()
-        }
+        state = getCleanState();
         localStorage.state = JSON.stringify(state);
 
         await html5QrCode.stop();
