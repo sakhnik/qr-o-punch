@@ -83,7 +83,7 @@ const getReadoutJson = (trim) => {
             checkTime: encodeTime(st.checkTime),
             startTime: encodeTime(st.controls[0].time),
             finishTime: encodeTime(st.controls[st.controls.length - 1].time),
-            punches: (trim ? st.controls.slice(1, st.length - 1) : st.controls).map((c) => ({
+            punches: (trim ? st.controls.slice(1, st.controls.length - 1) : st.controls).map((c) => ({
                 cardNumber: athlete.startNumber,
                 code: c.id,
                 time: encodeTime(c.time),
