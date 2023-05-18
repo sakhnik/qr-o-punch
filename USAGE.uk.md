@@ -46,7 +46,7 @@ Mozilla Firefox ([Android Play Market](https://play.google.com/store/apps/detail
 
 Джерело: [sakhnik/qr-o-punch](https://github.com/sakhnik/qr-o-punch)
 
-### Запуск без мобільного інтернету
+## Запуск без мобільного інтернету
 
 На смартфоні Android:
 
@@ -60,3 +60,13 @@ Mozilla Firefox ([Android Play Market](https://play.google.com/store/apps/detail
 * Перейти до адреси [http://localhost:8080/](http://localhost:8080/)
 
 Програма готова до сканування кодів електронної відмітки.
+
+## Підтримувана функціональність
+
+|  Функція        |  Google Chrome |  Mozilla Firefox |
+|-----------------|----------------|------------------|
+| Сканування      |  ✅            |  ✅              |
+| Геолокація      |  ✅            |  ✅              |
+| Звуковий сигнал |  ✅            |  ✅              |
+| Вібрація        |  ✅            |  ❌              |
+| Підсвітка       |  ✅            |  ❌              |
