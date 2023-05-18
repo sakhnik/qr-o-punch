@@ -311,5 +311,16 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
+let torchPowerOn = false;
+const torch = () => {
+    torchPowerOn = !torchPowerOn;
+    if (html5QrCode.getState() === Html5QrcodeScannerState.SCANNING ||
+            html5QrCode.getState() === Html5QrcodeScannerState.PAUSED) {
+        html5QrCode.applyVideoConstraints({
+            advanced: [{torch: torchPowerOn}]
+        });
+    }
+};
+
 // Test whether location is available, obtain permission etc.
 getLocation(null);
