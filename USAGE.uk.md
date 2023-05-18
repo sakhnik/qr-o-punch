@@ -1,6 +1,6 @@
 # Користування QR-O-Puncher
 
-## Учасникам
+## Інструкція
 
 Для фіксації проходження КП (контрольних пунктів) на дистанції, учаснику
 необхідно мати смартфон бажано з доступом до мобільного інтернету. Далі
@@ -13,13 +13,17 @@
 інтернетом для фіксації проходження дистанції.
 
 Програма запускається у будь-якому сучасному мобільному веб-браузері як то
-Google Chrome, Mozilla Firefox. Учасники з мобільним інтернетом відкривають
-сторінку сторінку https://sakhnik.com/qr, запам'ятовують її або додають у
+Google Chrome ([Android Play Market](https://play.google.com/store/apps/details?id=com.android.chrome),
+[Apple App Store](https://apps.apple.com/gb/app/google-chrome/id535886823)),
+Mozilla Firefox ([Android Play Market](https://play.google.com/store/apps/details?id=org.mozilla.firefox),
+[Apple App Store](https://apps.apple.com/us/app/firefox-private-safe-browser/id989804926)).
+Учасники з мобільним інтернетом відкривають
+сторінку сторінку [https://sakhnik.com/qr](https://sakhnik.com/qr), запам'ятовують її або додають у
 закладки. Учасники без мобільного інтернету мають встановити в себе на телефон
 будь-яку програму HTTP Server, наприклад,
-https://play.google.com/store/apps/details?id=com.phlox.simpleserver,
+[Simple HTTP Server](https://play.google.com/store/apps/details?id=com.phlox.simpleserver),
 налаштувати її перед стартом по окремій інструкції і запустити програму
-електронної відмітки з адреси http://localhost:8080/.
+електронної відмітки з адреси [http://localhost:8080/](http://localhost:8080/).
 
 При першому запуску слід надати програмі дозвіл на доступ до камери і служб
 місцезнаходження. При проходженні реєстрації потрібно відсканувати код у
@@ -29,25 +33,26 @@ https://play.google.com/store/apps/details?id=com.phlox.simpleserver,
 відмітку. Так само треба відсканувати код після фінішу, щоб зареєструвати
 інформацію про відмітки у суддівську систему та отримати роздруківку
 проходження дистанції. Якщо стався який-небудь збій програми чи пристрою, в
-будь-який момент можна перезавантажити програму з адреси https://sakhnik.com/qr
-або http://localhost:8080 відповідно. При цьому вся попередня інформація
+будь-який момент можна перезавантажити програму з адреси
+[https://sakhnik.com/qr](https://sakhnik.com/qr)
+або [http://localhost:8080](http://localhost:8080) відповідно.
+При цьому вся попередня інформація
 зберігається. Якщо можливості перезавантажити учаснику немає, необхідно робити
-фото на кожному наступному КП для пред'явлення секретаріату.Джерело:
-https://github.com/sakhnik/qr-o-punch
+фото на кожному наступному КП для пред'явлення секретаріату.
 
-Джерело: https://github.com/sakhnik/qr-o-punch
+Джерело: [sakhnik/qr-o-punch](https://github.com/sakhnik/qr-o-punch)
 
 ### Запуск без мобільного інтернету
 
 На смартфоні Android:
 
 * Встановити [Simple HTTP Server](https://play.google.com/store/apps/details?id=com.phlox.simpleserver)
-* Завантажити архів програми з адреси https://sakhnik.com/qr.zip
+* Завантажити архів програми з адреси [https://sakhnik.com/qr.zip](https://sakhnik.com/qr.zip)
 * Розпакувати (витягнути) файли з архіву в /sdcard/Download/qr/
 * Запустити додаток Simple HTTP Server
 * Задати Root folder -> External folder -> /sdcard/Download/qr
 * Натиснути START
 * Запустити навігатор тенет Google Chrome або Mozilla Firefox
-* Перейти до адреси http://localhost:8080/
+* Перейти до адреси [http://localhost:8080/](http://localhost:8080/)
 
 Програма готова до сканування кодів електронної відмітки.
