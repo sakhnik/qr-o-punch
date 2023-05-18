@@ -1,5 +1,9 @@
 # Користування QR-O-Puncher
 
+## Демонстрація
+
+[![Користування QR-O-Puncher](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0 "Користування QR-O-Puncher")
+
 ## Інструкція
 
 Для фіксації проходження КП (контрольних пунктів) на дистанції, учаснику
