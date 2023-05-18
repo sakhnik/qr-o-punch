@@ -5,31 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>QR O-Puncher</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
   </head>
-  <body onLoad="start()">
-    <div id="athlete" class="athlete">
-      <p><span id="startNumber">0</span> <span id="class">M21</span></p>
-      <p id="name"></p>
-      <p>Location: <span id="location">NA</span></p>
+  <body>
+    <div id="intro" onclick="introClick()">
+      Торкніться будь-де щоб почати.
     </div>
-    <div id="reader" width="600px"></div>
+    <div id="main" style="display: hidden;">
+      <div id="athlete" class="athlete">
+        <p><span id="startNumber">0</span> <span id="class">M21</span></p>
+        <p id="name"></p>
+        <p>Геолокація: <span id="location">Невідомо</span></p>
+      </div>
+      <div id="reader" width="600px"></div>
 
-    <button id="activate" type="button">Activate vibration</button>
-    <button id="torch" type="button" onclick="torch()">Підсвітка</button>
+      <button id="torch" type="button" onclick="torch()">Підсвітка</button>
 
-    <p>Source: https://github.com/sakhnik/qr-o-punch</p>
+      <p>Source: https://github.com/sakhnik/qr-o-punch</p>
+    </div>
 
-    <script>
-        // Force user to interact with UI to enable vibration.
-        const btActivate = document.getElementById("activate");
-        btActivate.addEventListener('click', (event) => {
-            btActivate.style.visibility = "hidden";
-        });
-    </script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="audio.js"></script>
-    <script src="index.js?filever=17"></script>
+    <script src="index.js?v=4"></script>
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
 

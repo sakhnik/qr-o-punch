@@ -311,6 +311,7 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
+// Toggle the flashlight
 let torchPowerOn = false;
 const torch = () => {
     torchPowerOn = !torchPowerOn;
@@ -320,6 +321,16 @@ const torch = () => {
             advanced: [{torch: torchPowerOn}]
         });
     }
+};
+
+// Hide the intro screen, show the main screen.
+// This is done to let the user interact with the UI to enable audio and vibration.
+const introClick = () => {
+    start();
+    const intro = document.getElementById("intro");
+    intro.style.display = 'none';
+    const main = document.getElementById("main");
+    main.style.display = 'block';
 };
 
 // Test whether location is available, obtain permission etc.
