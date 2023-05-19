@@ -305,7 +305,13 @@ function stop() {
 // Stop using camera when the page isn't visible or the screen is off
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        start();
+        // If the intro screen was clicked already (invisible),
+        // start the scanner.
+        let intro = document.getElementById("intro");
+        let computedStyle = window.getComputedStyle(intro);
+        if (computedStyle.display === 'none') {
+            start();
+        }
     } else {
         stop();
     }
