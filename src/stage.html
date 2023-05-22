@@ -79,7 +79,13 @@
 
     // Traditional keyboard navigation
     $(document).on('keydown', function(event) {
-        console.log(`event.key=${event.key}`);
+        console.log(document.activeElement.tagName);
+        if (document.activeElement.tagName === "INPUT") {
+            if (event.key === 'Enter') {
+                updateUI();
+            }
+            return;
+        }
         if (/^([ njl]|Enter|Right)$/.test(event.key)) {
             $('#next').click();
         } else if (/^(Backspace|Left|[pkh])$/.test(event.key)) {
