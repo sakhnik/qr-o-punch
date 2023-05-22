@@ -153,7 +153,11 @@ const getLocation = (control) => {
 
 const vibrate = (args) => {
     try {
-        navigator.vibrate(args);
+        if (typeof navigator.vibrate === 'function') {
+            navigator.vibrate(args);
+        } else {
+            console.log("Vibration not supported");
+        }
     } catch (e) {
         console.log("No vibration: " + e);
     }
