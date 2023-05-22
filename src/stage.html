@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Випробовування QR-O-Punch</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.rawgit.com/jeromeetienne/jquery-qrcode/1.0/jquery.qrcode.min.js"></script>
+</head>
+<body>
+  <div id="config">
+    <p>
+      <!-- Can only configure the parameters on the first page -->
+      <table>
+        <tr><td>Кількість контрольних пунктів</td><td><input type="number" id="count" placeholder="3"/></td></tr>
+        <tr><td>Номер</td><td><input type="number" id="number" placeholder="123"/></td></tr>
+        <tr><td>Ім’я</td><td><input type="text" id="name" placeholder="Прізвище Ім’я"/></td></tr>
+        <tr><td>Група</td><td><input type="text" id="class" placeholder="Ч21"/></td><tr>
+      </table>
+    </p>
+  </div>
+
+  <p>
+      <pre id="code"></pre>
+      <div id="qrcode"></div>
+  </p>
+
+  <p>
+    <button id="home" type="button" onclick="home()">&lt;&lt;</button>
+    <button id="prev" type="button" onclick="prev()">&lt;</button>
+    <span id="progress"></span>
+    <button id="next" type="button" onclick="next()">&gt;</button>
+    <button id="end" type="button" onclick="end()">&gt;&gt;</button>
+  </p>
+
+  <script>
+    let page = 0;
+
+    const getValue = (sel) => {
+        let val = $(sel).val();
+        return val !== '' ? val : $(sel).attr('placeholder');
+    };
+
+    const getPageCount = () => {
+        return 3 + parseInt(getValue("#count"));
+    };
+
+    const setCode = (code) => {
+        $('#code').text(code);
+        $('#qrcode').empty();
+        $('#qrcode').qrcode({ text: code });
+    };
+
+    const updateUI = () => {
+        if (page == 0) {
+            const number = getValue("#number");
+            const cl = getValue("#class");
+            const name = getValue("#name");
+            setCode(`SetStartNumber ${number} <${cl}> ${name}`);
+        } else if (page == 1) {
+            setCode("Check in for a new start");
+        } else if (page >= 2 && page + 1 < getPageCount()) {
+            const code = Array.from(Array(5), () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('');
+            setCode(`Control ${29 + page} ${code}`);
+        } else {
+            setCode("Display table");
+        }
+
+        $("#prev, #home").prop('disabled', page === 0);
+        $("#next, #end").prop('disabled', page + 1 >= getPageCount());
+        $("#config input").prop("disabled", page !== 0);
+        $("#progress").text(`${page + 1}/${getPageCount()}`);
+    };
+
+    const next = () => { updateUI(page < getPageCount() - 1 ? ++page : page); };
+    const prev = () => { updateUI(page > 0 ? --page : page); };
+    const home = () => { updateUI(page = 0); };
+    const end = () => { updateUI(page = getPageCount() - 1); };
+
+    updateUI();
+
+    // Traditional keyboard navigation
+    $(document).on('keydown', function(event) {
+        console.log(`event.key=${event.key}`);
+        if (/^([ njl]|Enter|Right)$/.test(event.key)) {
+            $('#next').click();
+        } else if (/^(Backspace|Left|[pkh])$/.test(event.key)) {
+            $('#prev').click();
+        } else if (/^(End|[G])$/.test(event.key)) {
+            $('#end').click();
+        } else if (/^(Home|[g])$/.test(event.key)) {
+            $('#home').click();
+        }
+    });
+  </script>
+</body>
+</html>
