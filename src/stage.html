@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Випробовування QR-O-Punch</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.rawgit.com/jeromeetienne/jquery-qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script src="qrcode.min.js"></script>
   <style>
 .table {
   border-collapse: collapse;
@@ -61,7 +61,7 @@
 
   <p>
       <pre id="code"></pre>
-      <div id="qrcode"></div>
+      <dev id="qrcode"></div>
   </p>
 
   <p>
@@ -86,8 +86,7 @@
 
     const setCode = (code) => {
         $('#code').text(code);
-        $('#qrcode').empty();
-        $('#qrcode').qrcode({ text: code });
+        new QRCode(document.getElementById("qrcode"), code);
     };
 
     const updateUI = () => {
