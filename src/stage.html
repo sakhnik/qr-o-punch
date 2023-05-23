@@ -1,16 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Випробовування QR-O-Punch</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.rawgit.com/jeromeetienne/jquery-qrcode/1.0/jquery.qrcode.min.js"></script>
+  <style>
+.table {
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: left;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #e6e6e6;
+}
+  </style>
 </head>
 <body>
+  <p>Інструкція:
+    <table class="table">
+      <thead>
+        <tr><th>Сторінка</th><th>Призначення</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Реєстрація</td></tr>
+        <tr><td>2</td><td>Очищення</td></tr>
+        <tr><td>3… ∀ КП</td><td>Контрольні пункти (КП)</td></tr>
+        <tr><td>Остання</td><td>Показати результат відмітки на екрані</td></tr>
+      </tbody>
+    </table>
+  </p>
   <div id="config">
     <p>
       <!-- Can only configure the parameters on the first page -->
       <table>
-        <tr><td>Кількість контрольних пунктів</td><td><input type="number" id="count" placeholder="3"/></td></tr>
+        <tr><td>Кількість КП</td><td><input type="number" id="count" placeholder="3"/></td></tr>
         <tr><td>Номер</td><td><input type="number" id="number" placeholder="123"/></td></tr>
         <tr><td>Ім’я</td><td><input type="text" id="name" placeholder="Прізвище Ім’я"/></td></tr>
         <tr><td>Група</td><td><input type="text" id="class" placeholder="Ч21"/></td><tr>
@@ -79,7 +120,6 @@
 
     // Traditional keyboard navigation
     $(document).on('keydown', function(event) {
-        console.log(document.activeElement.tagName);
         if (document.activeElement.tagName === "INPUT") {
             if (event.key === 'Enter') {
                 updateUI();
