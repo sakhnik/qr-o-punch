@@ -61,7 +61,7 @@
 
   <p>
       <pre id="code"></pre>
-      <dev id="qrcode"></div>
+      <div id="qrcode"></div>
   </p>
 
   <p>
@@ -86,6 +86,7 @@
 
     const setCode = (code) => {
         $('#code').text(code);
+        $('#qrcode').empty();
         new QRCode(document.getElementById("qrcode"), code);
     };
 
