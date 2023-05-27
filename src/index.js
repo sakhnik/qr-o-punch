@@ -28,7 +28,9 @@ displayAthlete(athlete);
 const getCleanState = () => {
     return {
         controls: [],
-        checkTime: new Date().toJSON()
+        checkTime: new Date().toJSON(),
+        startTime: new Date().toJSON(),
+        finishTime: new Date().toJSON(),
     };
 };
 let state = getCleanState();
@@ -73,21 +75,21 @@ const encodeTime = (json) => {
     return (h * 60 + m) * 60 + s;
 };
 
-const getReadoutJson = (trim) => {
+const getReadoutJson = () => {
     if (state.controls.length < 2) {
         return "Not enough punches (start, finish?)";
     }
     const getReadOut = (st) => {
-        if (st == null || st.controls == null || st.controls.length < 2) {
+        if (st == null || st.controls == null) {
             return {};
         }
         return {
             stationNumber: 1,
             cardNumber: athlete.startNumber,
             checkTime: encodeTime(st.checkTime),
-            startTime: encodeTime(st.controls[0].time),
-            finishTime: encodeTime(st.controls[st.controls.length - 1].time),
-            punches: (trim ? st.controls.slice(1, st.controls.length - 1) : st.controls).map((c) => ({
+            startTime: encodeTime(st.startTime),
+            finishTime: encodeTime(st.finishTime),
+            punches: st.controls.map((c) => ({
                 cardNumber: athlete.startNumber,
                 code: c.id,
                 time: encodeTime(c.time),
@@ -99,15 +101,11 @@ const getReadoutJson = (trim) => {
 };
 
 const upload = async (url) => {
-    if (state.controls.length < 2) {
-        return "Not enough punches (start, finish?)";
-    }
-
     // No need to upload start and finish punches.
     const resp = await fetch(url, {
         method: "POST",
         mode: 'cors',
-        body: getReadoutJson(true),
+        body: getReadoutJson(),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
@@ -182,16 +180,32 @@ const accept = async (id) => {
 
     let m;
 
-    // First process controls, that's most important
+    if (id.startsWith("StartRace")) {
+        // If there are other controls punched before start,
+        // forget about them. The athlete must have missed "Check in for a new start".
+        if (state.controls.length > 0) {
+            state = getCleanState();
+        }
+        state.startTime = new Date().toJSON();
+        localStorage.state = JSON.stringify(state);
+        vibrate(250);
+        blink('green', 250);
+        await beep(250, 880, 75);
+        return ACCEPT;
+    }
+
+    if (id.startsWith("FinishRace")) {
+        state.finishTime = new Date().toJSON();
+        localStorage.state = JSON.stringify(state);
+        vibrate(250);
+        blink('green', 250);
+        await beep(250, 880, 75);
+        return ACCEPT;
+    }
+
+    // Process controls, that's most important
     if ((m = id.match(controlRe)) !== null) {
         const controlId = Number.parseInt(m.groups.id);
-        // Assume "start" controls are low numbers. If there are other controls punched before start,
-        // forget about them. The athlete must have missed "Check in for a new start".
-        if (controlId <= 10) {
-            if (state.controls.length > 0) {
-                state = getCleanState();
-            }
-        }
         let controls = state.controls;
         const control = {id: controlId, code: m.groups.code, time: new Date().toJSON()};
         const prevControl = controls.length > 0 ? controls[controls.length - 1] : null;
@@ -254,7 +268,7 @@ const accept = async (id) => {
 
     if (id.startsWith("Display json")) {
         await html5QrCode.stop();
-        document.body.innerHTML = `<pre>${getReadoutJson(false)}</pre>`;
+        document.body.innerHTML = `<pre>${getReadoutJson()}</pre>`;
         return FINISH;
     }
 

@@ -11,6 +11,8 @@ The following commands could be encoded with [`qrencode`](https://fukuchi.org/wo
 
 * `SetStartNumber N <class> FirstName LastName` — set athlete name, class and start number
 * `Check in for a new start` — clear previous punches, mark check time
+* `StartRace` — start marker, also implicitly invokes `Check in for a new start`
+* `FinishRace` — finish marker to take the finish time measurement
 * `Control N <code>` — punch at some control
 * `Display table` — display the punched controls in a human readable form
 * `Display json` — display the punched controls in JSON format
@@ -52,11 +54,7 @@ From the Quick Event host, SSH could be used to forward port 8888 on the web ser
 ssh sakhnik.com -R 8888:localhost:12345
 ```
 
-Then Quick Event should be instructed to start listening on port 12345:
-
-```
-QE_TCP_PORT=12345 quickevent
-```
+Then Quick Event should be instructed to start listening on port 12345 using the QR-O-Punch service.
 
 Thus, runners could use the following QR command to upload their punch card readouts:
 

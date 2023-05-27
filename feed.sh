@@ -12,11 +12,13 @@ show_qr()
     read
 }
 
-#show_qr "SetStartNumber 123 <M21> Anatolii Sakhnik"
-#show_qr "Check in for a new start"
-#
-#for i in $(cat $1); do
-#    show_qr "Control $i $(fortune | cut -f1-10 -d' ' | head -1)"
-#done
+show_qr "SetStartNumber 123 <M21> Anatolii Sakhnik"
+show_qr "Check in for a new start"
+show_qr "StartRace"
 
+for i in $(cat $1); do
+    show_qr "Control $i $(fortune | cut -f1-10 -d' ' | head -1)"
+done
+
+show_qr "FinishRace"
 show_qr "UploadReadOut https://sakhnik.com/qr-o-punch/card"

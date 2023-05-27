@@ -42,7 +42,9 @@
       <tbody>
         <tr><td>1</td><td>Реєстрація</td></tr>
         <tr><td>2</td><td>Очищення</td></tr>
-        <tr><td>3… ∀ КП</td><td>Контрольні пункти (КП)</td></tr>
+        <tr><td>3</td><td>Старт</td></tr>
+        <tr><td>4… ∀ КП</td><td>Контрольні пункти (КП)</td></tr>
+        <tr><td>Передостання</td><td>Фініш</td></tr>
         <tr><td>Остання</td><td>Показати результат відмітки на екрані</td></tr>
       </tbody>
     </table>
@@ -81,7 +83,7 @@
     };
 
     const getPageCount = () => {
-        return 3 + parseInt(getValue("#count"));
+        return 5 + parseInt(getValue("#count"));
     };
 
     const setCode = (code) => {
@@ -98,9 +100,13 @@
             setCode(`SetStartNumber ${number} <${cl}> ${name}`);
         } else if (page == 1) {
             setCode("Check in for a new start");
-        } else if (page >= 2 && page + 1 < getPageCount()) {
+        } else if (page == 2) {
+            setCode("StartRace");
+        } else if (page >= 3 && page + 2 < getPageCount()) {
             const code = Array.from(Array(5), () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('');
-            setCode(`Control ${29 + page} ${code}`);
+            setCode(`Control ${28 + page} ${code}`);
+        } else if (page + 2 == getPageCount()) {
+            setCode(`FinishRace`);
         } else {
             setCode("Display table");
         }
