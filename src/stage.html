@@ -122,8 +122,6 @@
     const home = () => { updateUI(page = 0); };
     const end = () => { updateUI(page = getPageCount() - 1); };
 
-    updateUI();
-
     // Traditional keyboard navigation
     $(document).on('keydown', function(event) {
         if (document.activeElement.tagName === "INPUT") {
@@ -142,6 +140,19 @@
             $('#home').click();
         }
     });
+
+    $(document).ready(function() {
+        updateUI();
+
+        let typingTimer;
+
+        // Update UI when stopped typing
+        $('input').on('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(updateUI, 500);
+        });
+    });
+
   </script>
 </body>
 </html>
