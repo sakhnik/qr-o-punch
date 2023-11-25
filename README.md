@@ -1,4 +1,4 @@
-# QR O-Puncher
+# QR O-Punch
 
 QR-code based punching app for orienteering to be used whenever SportIndent isn't available.
 Intended to be used with [Quick-Event/quickbox](https://github.com/sakhnik/quickbox/tree/feature/tcp) for event management.

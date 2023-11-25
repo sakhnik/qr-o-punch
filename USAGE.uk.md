@@ -1,8 +1,8 @@
-# Користування QR-O-Puncher
+# Користування QR-O-Punch
 
 [![Зелеста](doc/zelesta.jpg)](https://www.facebook.com/ZELESTAclub)
 
-[![Користування QR-O-Puncher](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0)
+[![Користування QR-O-Punch](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0)
 
 ## Віртуальний полігон
 
