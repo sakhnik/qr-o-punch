@@ -7,6 +7,8 @@ Organizers should print QR codes with commands on controls, and participants cou
 
 Інструкція українською мовою: [USAGE.uk.md](USAGE.uk.md).
 
+[![ZELESTAclub](doc/zelesta.jpg)](https://www.facebook.com/ZELESTAclub)
+
 ## Commands
 
 The following commands could be encoded with [`qrencode`](https://fukuchi.org/works/qrencode/), for example:

@@ -1,6 +1,6 @@
 # Користування QR-O-Puncher
 
-## Демонстрація
+[![Зелеста](doc/zelesta.jpg)](https://www.facebook.com/ZELESTAclub)
 
 [![Користування QR-O-Puncher](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0)
 
@@ -106,6 +106,9 @@ Google Chrome і Mozilla Firefox:
 
 [![Автономний QR-O-Punch в iOS](https://img.youtube.com/vi/JW1CmCI3y94/0.jpg)](https://www.youtube.com/watch?v=Usd0GqNuOTo)
 
-## Початковий код
+## Консультації і підтримка
 
 Джерело: [sakhnik/qr-o-punch](https://github.com/sakhnik/qr-o-punch)
+
+Розроблено в клубі спортивного орієнтування Зелеста. З питаннями про застосування системи, підготовки, організації і проведення спортивних заходів,
+звертайтеся до контактів на сторінці у Facebook: [ZELESTAclub](https://www.facebook.com/ZELESTAclub).
