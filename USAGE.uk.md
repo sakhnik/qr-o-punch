@@ -2,6 +2,7 @@
 
 [![Зелеста](doc/zelesta.jpg)](https://www.facebook.com/ZELESTAclub)
 
+[Користування QR-O-Punch](https://www.youtube.com/watch?v=rHFYLPIyBp0)
 [![Користування QR-O-Punch](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0)
 
 ## Віртуальний полігон
@@ -89,6 +90,7 @@ Google Chrome і Mozilla Firefox:
 
 Програма готова до сканування кодів електронної відмітки.
 
+[Автономний QR-O-Punch на Android](https://www.youtube.com/watch?v=JW1CmCI3y94)
 [![Автономний QR-O-Punch на Android](https://img.youtube.com/vi/JW1CmCI3y94/0.jpg)](https://www.youtube.com/watch?v=JW1CmCI3y94)
 
 ### На смартфоні iOS
@@ -104,6 +106,7 @@ Google Chrome і Mozilla Firefox:
 * Запустити навігатор тенет Google Chrome або Mozilla Firefox
 * Перейти до адреси [http://localhost:8000/](http://localhost:8000/)
 
+[Автономний QR-O-Punch в iOS](https://www.youtube.com/watch?v=Usd0GqNuOTo)
 [![Автономний QR-O-Punch в iOS](https://img.youtube.com/vi/JW1CmCI3y94/0.jpg)](https://www.youtube.com/watch?v=Usd0GqNuOTo)
 
 ## Консультації і підтримка
