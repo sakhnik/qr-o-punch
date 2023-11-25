@@ -2,7 +2,7 @@
 
 ## Демонстрація
 
-[![Користування QR-O-Puncher](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0 "Користування QR-O-Puncher")
+[![Користування QR-O-Puncher](https://img.youtube.com/vi/rHFYLPIyBp0/0.jpg)](https://www.youtube.com/watch?v=rHFYLPIyBp0)
 
 ## Віртуальний полігон
 
@@ -89,7 +89,7 @@ Google Chrome і Mozilla Firefox:
 
 Програма готова до сканування кодів електронної відмітки.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/JW1CmCI3y94?si=YC852eMwT4EUJFV2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![Автономний QR-O-Punch на Android](https://img.youtube.com/vi/JW1CmCI3y94/0.jpg)](https://www.youtube.com/watch?v=JW1CmCI3y94)
 
 ### На смартфоні iOS
 
@@ -104,7 +104,7 @@ Google Chrome і Mozilla Firefox:
 * Запустити навігатор тенет Google Chrome або Mozilla Firefox
 * Перейти до адреси [http://localhost:8000/](http://localhost:8000/)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Usd0GqNuOTo?si=kTXAOTguOrycs4vA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![Автономний QR-O-Punch в iOS](https://img.youtube.com/vi/JW1CmCI3y94/0.jpg)](https://www.youtube.com/watch?v=Usd0GqNuOTo)
 
 ## Початковий код
 

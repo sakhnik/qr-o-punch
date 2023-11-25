@@ -5,6 +5,8 @@ Intended to be used with [Quick-Event/quickbox](https://github.com/sakhnik/quick
 
 Organizers should print QR codes with commands on controls, and participants could punch their course by scanning the QR codes on the way.
 
+Інструкція українською мовою: [USAGE.uk.md](USAGE.uk.md).
+
 ## Commands
 
 The following commands could be encoded with [`qrencode`](https://fukuchi.org/works/qrencode/), for example:
